@@ -11,6 +11,7 @@ node {
 task build
 
 //declare a task to create a zip of the app
+//zipp section
 tasks.register('myzip', Zip) {
     archiveFileName = "trainSchedule.zip"
     destinationDirectory = layout.buildDirectory.dir('../dist')
