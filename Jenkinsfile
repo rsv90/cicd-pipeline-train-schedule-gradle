@@ -6,7 +6,7 @@ pipeline {
             input{
                 message 'Should we proceed?'
                 ok "Yes, go ahead"
-                submitter 'rsvv'
+                submitter 'ggg'
                 parameters {
                     string(name:'Person', defaultValue:'Nobody', description: 'type a name')
                 }
