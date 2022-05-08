@@ -7,7 +7,7 @@ pipeline {
                 message 'Should we proceed?'
                 ok "Yes, go ahead"
                 submitter 'rsv'
-                parametrs{
+                parameters {
                     string(name:'Person', defaultValue:'Nobody', description: 'type a name')
                 }
             }
