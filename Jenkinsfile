@@ -10,6 +10,7 @@ pipeline {
                 parmetrs{
                     string(name:'Person', defaultValue:'Nobody', description: 'type a name')
                 }
+            }
             steps {
                 echo 'Starting build by ${Person}'
                 sh './gradlew build --no-daemon'
