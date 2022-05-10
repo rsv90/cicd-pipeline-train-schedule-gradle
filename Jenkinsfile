@@ -52,7 +52,7 @@ pipeline {
                         {
                         def remote = [:]
                                 remote.name = 'xps'
-                                remote.host = $prod_ip
+                                remote.host = "${prod_ip}"
                                 remote.user = $USERNAME
                                 remote.password = $USERPASS
                                 remote.allowAnyHosts = true
