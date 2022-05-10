@@ -1,12 +1,12 @@
 pipeline {
     agent any
 
-    remote = [:]
-            remote.name = 'xps'
-            remote.host = ${prod_ip}
-            remote.user = ${USERNAME}
-            remote.password = ${USERPASS}
-            remote.allowAnyHosts = true 
+     remote = [:]
+                        remote.name = 'xps'
+                        remote.host = ${prod_ip}
+                        remote.user = ${USERNAME}
+                        remote.password = ${USERPASS}
+                        remote.allowAnyHosts = true 
 
 
 
@@ -57,6 +57,7 @@ pipeline {
                 milestone(1)
                 withCredentials([usernamePassword(credentialsId: 'web_server_cred', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) {
                    //script 
+                  
                     sshCommand remote: remote, command: "ls -lrt"
                     // {
                     //     sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$prod_ip \"docker pull willbla/train-schedule:${env.BUILD_NUMBER}\""
