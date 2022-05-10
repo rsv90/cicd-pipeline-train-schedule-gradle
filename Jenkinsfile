@@ -1,8 +1,10 @@
-pipeline {
+pipeline 
+{
     agent any
     
 
-    stages {
+    stages 
+    {
         stage('build') {
             steps {
                 echo "Starting build "
@@ -12,7 +14,7 @@ pipeline {
             }
         }
    
-           stage('Build Docker Image') {
+            stage('Build Docker Image') {
             when {
                 branch 'master'
             }
@@ -40,14 +42,17 @@ pipeline {
         }
 
 
-        stage('DeployToProduction') {
+        stage('DeployToProduction') 
+        {
             when {
                 branch 'master'
             }
-            steps {
+            steps
+            {
                 //input 'Deploy to Production?'
                 milestone(1)
-                withCredentials([usernamePassword(credentialsId: 'web_server_cred', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) {
+                withCredentials([usernamePassword(credentialsId: 'web_server_cred', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) 
+                {
                     script 
                         {
                         def remote = [:]
@@ -65,20 +70,9 @@ pipeline {
                                     echo: 'caught error: $err'
                                 }
                                 sshCommand remote: remote, command:"docker run --restart always --name train-schedule -p 3000:3000 -d rsv90/train-schedule:latest"
-                  
-                    
-                    // {
-                    //     sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$prod_ip \"docker pull willbla/train-schedule:${env.BUILD_NUMBER}\""
-                    //     try {
-                    //         sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$prod_ip \"docker stop train-schedule\""
-                    //         sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$prod_ip \"docker rm train-schedule\""
-                    //     } catch (err) {
-                    //         echo: 'caught error: $err'
-                    //     }
-                    //     sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$prod_ip \"docker run --restart always --name train-schedule -p 3000:3000 -d willbla/train-schedule:${env.BUILD_NUMBER}\""
-                    // }
+                        }
                 }
             }
-        }
+        }   
     }
 }
