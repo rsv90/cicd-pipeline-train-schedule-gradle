@@ -1,14 +1,6 @@
 pipeline {
     agent any
-
-    def remote = [:]
-                        remote.name = 'xps'
-                        remote.host = ${prod_ip}
-                        remote.user = ${USERNAME}
-                        remote.password = ${USERPASS}
-                        remote.allowAnyHosts = true 
-
-
+    
 
     stages {
         stage('build') {
@@ -56,9 +48,18 @@ pipeline {
                 input 'Deploy to Production?'
                 milestone(1)
                 withCredentials([usernamePassword(credentialsId: 'web_server_cred', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) {
-                   //script 
+                    script 
+                        {
+                        def remote = [:]
+                                remote.name = 'xps'
+                                remote.host = ${prod_ip}
+                                remote.user = ${USERNAME}
+                                remote.password = ${USERPASS}
+                                remote.allowAnyHosts = true
+                                    sshCommand remote: remote, command: "ls -lrt" 
+                        }
                   
-                    sshCommand remote: remote, command: "ls -lrt"
+                    
                     // {
                     //     sh "sshpass -p '$USERPASS' -v ssh -o StrictHostKeyChecking=no $USERNAME@$prod_ip \"docker pull willbla/train-schedule:${env.BUILD_NUMBER}\""
                     //     try {
