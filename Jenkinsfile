@@ -10,7 +10,7 @@ pipeline {
             }
         }
    
-        s   stage('Build Docker Image') {
+           stage('Build Docker Image') {
             when {
                 branch 'master'
             }
