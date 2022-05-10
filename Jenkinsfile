@@ -10,23 +10,17 @@ pipeline {
             }
         }
    
-        stage  ('Build Docker Image') {
+        s   stage('Build Docker Image') {
             when {
                 branch 'master'
             }
             steps {
-                    script {
-                    def myImage = docker.build("rsv90/trainnew:${env.BUILD_ID}")
-                    myImage.inside {
+                script {
+                    app = docker.build("rsv90/train-schedule")
+                    app.inside {
                         sh 'echo $(curl localhost:3000)'
                     }
-                    }
-                // script {
-                //     app = docker.build("rsv90/train-schedule")
-                //     app.inside {
-                //         sh 'echo $(curl localhost:3000)'
-                //     }
-                // }
+                }
             }
         }
         stage('Push Docker Image') {
@@ -35,19 +29,11 @@ pipeline {
             }
             steps {
                 script {
-            docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login')
-            {
-         
-               myImage.push( "${env.BUILD_ID}" )
-               myImage.push("latest")
-            }
-            }
-                // script {
-                //     docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
-                //         app.push("${env.BUILD_NUMBER}")
-                //         app.push("latest")
-                //     }
-                // }
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
+                        app.push("${env.BUILD_NUMBER}")
+                        app.push("latest")
+                    }
+                }
             }
         }
 
