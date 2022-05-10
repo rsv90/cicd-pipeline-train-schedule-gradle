@@ -1,12 +1,12 @@
 pipeline {
     agent any
 
-     def remote = [:]
-                        remote.name = 'xps'
-                        remote.host = ${prod_ip}
-                        remote.user = ${USERNAME}
-                        remote.password = ${USERPASS}
-                        remote.allowAnyHosts = true 
+    remote = [:]
+            remote.name = 'xps'
+            remote.host = ${prod_ip}
+            remote.user = ${USERNAME}
+            remote.password = ${USERPASS}
+            remote.allowAnyHosts = true 
 
 
 
