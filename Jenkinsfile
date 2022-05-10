@@ -2,14 +2,6 @@ pipeline {
     agent any
     stages {
         stage('build') {
-            // input{
-            //     message 'Should we proceed?'
-            //     ok "Yes, go ahead"
-            //     submitter 'ggg'
-            //     parameters {
-            //         string(name:'Person', defaultValue:'Nobody', description: 'type a name')
-            //     }
-            // }
             steps {
                 echo "Starting build by ${Person}"
                 sh './gradlew build --no-daemon'
@@ -23,10 +15,12 @@ pipeline {
                 branch 'master'
             }
             steps {
-                def myImage = docker.build("rsv90/trainnew:${env.BUILD_ID}")
-                myImage.inside {
-                    sh 'echo $(curl localhost:3000)'
-                }
+                    script {
+                    def myImage = docker.build("rsv90/trainnew:${env.BUILD_ID}")
+                    myImage.inside {
+                        sh 'echo $(curl localhost:3000)'
+                    }
+                    }
                 // script {
                 //     app = docker.build("rsv90/train-schedule")
                 //     app.inside {
@@ -40,11 +34,13 @@ pipeline {
                 branch 'master'
             }
             steps {
+                script {
             docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login')
             {
          
                myImage.push( "${env.BUILD_ID}" )
                myImage.push("latest")
+            }
             }
                 // script {
                 //     docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
@@ -55,7 +51,7 @@ pipeline {
             }
         }
 
-        
+
         // stage('DeployToProduction') {
         //     when {
         //         branch 'master1'
