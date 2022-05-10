@@ -1,7 +1,7 @@
 pipeline {
     agent any
 
-     remote = [:]
+    def remote = [:]
                         remote.name = 'xps'
                         remote.host = ${prod_ip}
                         remote.user = ${USERNAME}
