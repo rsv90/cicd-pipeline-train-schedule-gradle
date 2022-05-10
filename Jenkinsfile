@@ -32,7 +32,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
-                        db.push("${env.BUILD_NUMBER}")
+                        //db.push("${env.BUILD_NUMBER}")
                         db.push("latest")
                     }
                 }
@@ -45,7 +45,7 @@ pipeline {
                 branch 'master'
             }
             steps {
-                input 'Deploy to Production?'
+                //input 'Deploy to Production?'
                 milestone(1)
                 withCredentials([usernamePassword(credentialsId: 'web_server_cred', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) {
                     script 
@@ -56,8 +56,15 @@ pipeline {
                                 remote.user = "${USERNAME}"
                                 remote.password = "${USERPASS}"
                                 remote.allowAnyHosts = true
-                                    sshCommand remote: remote, command: "ls -lrt" 
-                        }
+                                    sshCommand remote: remote, command: "docker pull rsv90/train-schedule:latest" 
+                             try {
+                                   sshCommand remote: remote, command: "docker stop train-schedule"
+                                   sshCommand remote: remote, command: "docker rm train-schedule"
+                                } 
+                                catch (err) {
+                                    echo: 'caught error: $err'
+                                }
+                                sshCommand remote: remote, command:"docker run --restart always --name train-schedule -p 3000:3000 -d rsv90/train-schedule:latest"
                   
                     
                     // {
