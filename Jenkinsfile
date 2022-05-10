@@ -53,8 +53,8 @@ pipeline {
                         def remote = [:]
                                 remote.name = 'xps'
                                 remote.host = "${prod_ip}"
-                                remote.user = $USERNAME
-                                remote.password = $USERPASS
+                                remote.user = "${USERNAME}"
+                                remote.password = "${USERPASS}"
                                 remote.allowAnyHosts = true
                                     sshCommand remote: remote, command: "ls -lrt" 
                         }
