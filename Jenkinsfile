@@ -8,41 +8,41 @@ pipeline
 
     stages 
     {
-        stage('build') {
-            steps {
-                echo "Starting build "
-                sh './gradlew build --no-daemon'
+        // stage('build') {
+        //     steps {
+        //         echo "Starting build "
+        //         sh './gradlew build --no-daemon'
              
-                archiveArtifacts artifacts: 'dist/trainSchedule.zip'
-            }
-        }
+        //         archiveArtifacts artifacts: 'dist/trainSchedule.zip'
+        //     }
+        // }
    
-            stage('Build Docker Image') {
-            when {
-                branch 'master'
-            }
-            steps {
-                script {
-                    db = docker.build("${DOCKER_IMAGE_NAME}")
-                    db.inside {
-                        sh 'echo $(curl localhost:3000)'
-                    }
-                }
-            }
-        }
-        stage('Push Docker Image') {
-            when {
-                branch 'master'
-            }
-            steps {
-                script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
-                        //db.push("${env.BUILD_NUMBER}")
-                        db.push("latest")
-                    }
-                }
-            }
-        }
+        //     stage('Build Docker Image') {
+        //     when {
+        //         branch 'master'
+        //     }
+        //     steps {
+        //         script {
+        //             db = docker.build("${DOCKER_IMAGE_NAME}")
+        //             db.inside {
+        //                 sh 'echo $(curl localhost:3000)'
+        //             }
+        //         }
+        //     }
+        // }
+        // stage('Push Docker Image') {
+        //     when {
+        //         branch 'master'
+        //     }
+        //     steps {
+        //         script {
+        //             docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
+        //                 //db.push("${env.BUILD_NUMBER}")
+        //                 db.push("latest")
+        //             }
+        //         }
+        //     }
+        // }
 
 
         stage('DeployToProduction') 
