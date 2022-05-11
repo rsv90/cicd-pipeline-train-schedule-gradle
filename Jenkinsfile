@@ -23,7 +23,7 @@ pipeline
             }
             steps {
                 script {
-                    db = docker.build("DOCKER_IMAGE_NAME")
+                    db = docker.build("${DOCKER_IMAGE_NAME}")
                     db.inside {
                         sh 'echo $(curl localhost:3000)'
                     }
