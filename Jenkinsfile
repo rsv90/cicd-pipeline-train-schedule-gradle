@@ -1,6 +1,9 @@
 pipeline 
 {
     agent any
+    environment {
+        DOCKER_IMAGE_NAME = "rsv90/train-schedule"
+    }
     
 
     stages 
@@ -20,7 +23,7 @@ pipeline
             }
             steps {
                 script {
-                    db = docker.build("rsv90/train-schedule")
+                    db = docker.build("DOCKER_IMAGE_NAME")
                     db.inside {
                         sh 'echo $(curl localhost:3000)'
                     }
@@ -51,27 +54,33 @@ pipeline
             {
                 //input 'Deploy to Production?'
                 milestone(1)
-                withCredentials([usernamePassword(credentialsId: 'web_server_cred', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) 
-                {
-                    script 
-                        {
-                        def remote = [:]
-                                remote.name = 'xps'
-                                remote.host = "${prod_ip}"
-                                remote.user = "${USERNAME}"
-                                remote.password = "${USERPASS}"
-                                remote.allowAnyHosts = true
-                                    sshCommand remote: remote, command: "docker pull rsv90/train-schedule:latest" 
-                             try {
-                                   sshCommand remote: remote, command: "docker stop train-schedule"
-                                   sshCommand remote: remote, command: "docker rm train-schedule"
-                                } 
-                                catch (err) {
-                                    echo: 'caught error: $err'
-                                }
-                                sshCommand remote: remote, command:"docker run --restart always --name train-schedule -p 3000:3000 -d rsv90/train-schedule:latest"
-                        }
-                }
+
+                kubernetesDeploy(
+                    kubeconfigId: 'kubeconfig',
+                    configs: 'train-schedule.yml',
+                    enableConfigSubstitution: true
+                )
+                // withCredentials([usernamePassword(credentialsId: 'web_server_cred', usernameVariable: 'USERNAME', passwordVariable: 'USERPASS')]) 
+                // {
+                //     script 
+                //         {
+                //         def remote = [:]
+                //                 remote.name = 'xps'
+                //                 remote.host = "${prod_ip}"
+                //                 remote.user = "${USERNAME}"
+                //                 remote.password = "${USERPASS}"
+                //                 remote.allowAnyHosts = true
+                //                     sshCommand remote: remote, command: "docker pull rsv90/train-schedule:latest" 
+                //              try {
+                //                    sshCommand remote: remote, command: "docker stop train-schedule"
+                //                    sshCommand remote: remote, command: "docker rm train-schedule"
+                //                 } 
+                //                 catch (err) {
+                //                     echo: 'caught error: $err'
+                //                 }
+                //                 sshCommand remote: remote, command:"docker run --restart always --name train-schedule -p 3000:3000 -d rsv90/train-schedule:latest"
+                //         }
+                // }
             }
         }   
     }
