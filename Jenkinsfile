@@ -11,9 +11,9 @@ pipeline
         stage('build') {
             steps {
                 echo "Starting build "
-                sh './gradlew build --no-daemon'
+                //sh './gradlew build --no-daemon'
              
-                archiveArtifacts artifacts: 'dist/trainSchedule.zip'
+                //archiveArtifacts artifacts: 'dist/trainSchedule.zip'
             }
         }
    
@@ -23,10 +23,11 @@ pipeline
             }
             steps {
                 script {
-                    db = docker.build("${DOCKER_IMAGE_NAME}")
-                    db.inside {
-                        sh 'echo $(curl localhost:3000)'
-                    }
+                       echo "Skipped"
+                //    db = docker.build("${DOCKER_IMAGE_NAME}")
+                //    db.inside {
+                //        sh 'echo $(curl localhost:3000)'
+                //    }
                 }
             }
         }
@@ -36,9 +37,10 @@ pipeline
             }
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
-                        //db.push("${env.BUILD_NUMBER}")
-                        db.push("latest")
+                       echo "Skipped"
+                //    docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
+                //        //db.push("${env.BUILD_NUMBER}")
+                //        db.push("latest")
                     }
                 }
             }
