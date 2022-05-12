@@ -17,7 +17,7 @@ pipeline
             }
         }
    
-            stage('Build Docker Image') {
+        stage('Build Docker Image') {
             when {
                 branch 'master'
             }
@@ -41,7 +41,7 @@ pipeline
                 //    docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
                 //        //db.push("${env.BUILD_NUMBER}")
                 //        db.push("latest")
-                    }
+                //    }
                 }
             }
         }
